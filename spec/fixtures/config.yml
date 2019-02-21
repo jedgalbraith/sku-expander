@@ -1,0 +1,137 @@
+category:
+  length: 1
+  output_order: 1
+  options:
+    B: Bracket
+    K: System
+    H: Hardware
+    A: Accessory
+    T: Tools
+    S: Slab
+    W: Swatch
+style:
+  length: 2
+  output_order: 2
+  options:
+    FS: Aksel
+    FC: Drake
+    TB: Clarke
+    FM: Glenn
+    FD: Yuri
+    MR: Mirror
+    SL: Solid
+    EN: Engineered
+    LB: Visible Bracket
+    VB: Leif
+    VS: Verne
+type:
+  length: 2
+  output_order: 4
+  options:
+    '00': '-'
+    '01': HD
+    '34': MD
+    '03': Three
+    '04': Four
+    '05': Five
+    CR: Collier Round
+    EB: Ebonized Black
+    HD: HD
+    LD: LD
+    MD: MD
+    SB: Satin Brass
+    SN: Satin Nickel
+    SR: Single Rod
+    TR: Tromso
+    XD: XD
+description_1:
+  length: 2
+  output_order: 6
+  options:
+    '00': '-'
+    '06': 6" W
+    '07': 7" W
+    '08': 8" W
+    '09': 9" W
+    '10': 10" W
+    '12': 12" W
+    '14': 14" W
+    '16': 16" W
+    '18': 18" W
+    '20': 20" W
+    '22': 22" W
+    '26': 26" W
+    '30': 30" W
+    '34': 34" W
+    '38': 38" W
+    '42': 42" W
+    '45': 45" W
+    '46': 46" W
+    '50': 50" W
+    '54': 54" W
+    '58': 58" W
+    '60': 60" W
+    '70': 70" W
+    '78': 78" W
+    BT: Bandsaw
+    RC: Bandsaw
+    SS: Smooth
+description_2:
+  length: 2
+  output_order: 5
+  options:
+    '00': '-'
+    '06': 6" D
+    '07': 7" D
+    '08': 8" D
+    '09': 9" D
+    '10': 10" D
+    '12': 12" D
+    RD: Round
+    SQ: Square
+material:
+  length: 2
+  output_order: 3
+  options:
+    AL: Alder
+    CS: Crbn Stl
+    MA: Maple
+    MD: MDF
+    MH: Mahogany
+    MM: Mxd Mtls
+    OK: Oak
+    RE: Rclmd
+    WL: Walnut
+    WO: White Oak
+finish:
+  length: 2
+  output_order: 7
+  options:
+    AS: Ash
+    B1: Black Prmr
+    B2: Black Pwdr Coat
+    B3: Black Shelf Paint
+    BL: Black
+    C2: Blue Gloss
+    CH: Cherry
+    CL: Clear
+    DM: Dutch Mocha
+    EP: Elctr Pltd
+    ES: Espresso
+    G1: Grey Shelf Paint
+    G2: Green Gloss
+    GL: Glazed
+    HG: Hatch Grey
+    K2: Black Gloss
+    NM: Nutmeg
+    O2: Orange Gloss
+    UF: Unfinished
+    W2: White Pwdr Coat
+    Y2: Yellow Gloss
+    R2: Red Gloss
+    N2: Grey Gloss
+extension:
+  length: 2
+  output_order: 8
+  options:
+    '-S':
