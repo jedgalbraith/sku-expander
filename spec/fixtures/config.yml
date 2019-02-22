@@ -1,137 +1,374 @@
-category:
-  length: 1
-  output_order: 1
-  options:
-    B: Bracket
-    K: System
-    H: Hardware
-    A: Accessory
-    T: Tools
-    S: Slab
-    W: Swatch
-style:
-  length: 2
-  output_order: 2
-  options:
-    FS: Aksel
-    FC: Drake
-    TB: Clarke
-    FM: Glenn
-    FD: Yuri
-    MR: Mirror
-    SL: Solid
-    EN: Engineered
-    LB: Visible Bracket
-    VB: Leif
-    VS: Verne
-type:
-  length: 2
-  output_order: 4
-  options:
-    '00': '-'
-    '01': HD
-    '34': MD
-    '03': Three
-    '04': Four
-    '05': Five
-    CR: Collier Round
-    EB: Ebonized Black
-    HD: HD
-    LD: LD
-    MD: MD
-    SB: Satin Brass
-    SN: Satin Nickel
-    SR: Single Rod
-    TR: Tromso
-    XD: XD
-description_1:
-  length: 2
-  output_order: 6
-  options:
-    '00': '-'
-    '06': 6" W
-    '07': 7" W
-    '08': 8" W
-    '09': 9" W
-    '10': 10" W
-    '12': 12" W
-    '14': 14" W
-    '16': 16" W
-    '18': 18" W
-    '20': 20" W
-    '22': 22" W
-    '26': 26" W
-    '30': 30" W
-    '34': 34" W
-    '38': 38" W
-    '42': 42" W
-    '45': 45" W
-    '46': 46" W
-    '50': 50" W
-    '54': 54" W
-    '58': 58" W
-    '60': 60" W
-    '70': 70" W
-    '78': 78" W
-    BT: Bandsaw
-    RC: Bandsaw
-    SS: Smooth
-description_2:
-  length: 2
-  output_order: 5
-  options:
-    '00': '-'
-    '06': 6" D
-    '07': 7" D
-    '08': 8" D
-    '09': 9" D
-    '10': 10" D
-    '12': 12" D
-    RD: Round
-    SQ: Square
-material:
-  length: 2
-  output_order: 3
-  options:
-    AL: Alder
-    CS: Crbn Stl
-    MA: Maple
-    MD: MDF
-    MH: Mahogany
-    MM: Mxd Mtls
-    OK: Oak
-    RE: Rclmd
-    WL: Walnut
-    WO: White Oak
-finish:
-  length: 2
-  output_order: 7
-  options:
-    AS: Ash
-    B1: Black Prmr
-    B2: Black Pwdr Coat
-    B3: Black Shelf Paint
-    BL: Black
-    C2: Blue Gloss
-    CH: Cherry
-    CL: Clear
-    DM: Dutch Mocha
-    EP: Elctr Pltd
-    ES: Espresso
-    G1: Grey Shelf Paint
-    G2: Green Gloss
-    GL: Glazed
-    HG: Hatch Grey
-    K2: Black Gloss
-    NM: Nutmeg
-    O2: Orange Gloss
-    UF: Unfinished
-    W2: White Pwdr Coat
-    Y2: Yellow Gloss
-    R2: Red Gloss
-    N2: Grey Gloss
-extension:
-  length: 2
-  output_order: 8
-  options:
-    '-S':
+# Shared Lists
+metal_materials: &metal_materials
+  CS: Crbn Stl
+  MM: Mxd Mtls
+  RE: Rclmd
+
+widths: &widths
+  '07': 7" W
+  '08': 8" W
+  '09': 9" W
+  '10': 10" W
+  '12': 12" W
+  '14': 14" W
+  '16': 16" W
+  '18': 18" W
+  '20': 20" W
+  '22': 22" W
+  '26': 26" W
+  '30': 30" W
+  '34': 34" W
+  '38': 38" W
+  '42': 42" W
+  '45': 45" W
+  '46': 46" W
+  '50': 50" W
+  '54': 54" W
+  '58': 58" W
+  '60': 60" W
+  '70': 70" W
+  '78': 78" W
+
+rod_depths: &rod_depths
+  '06': 6" Rods
+  '08': 8" Rods
+  '10': 10" Rods
+  '12': 12" Rods
+  '14': 14" Rods
+  '16': 16" Rods
+  '20': 20" Rods
+  RD: Round
+
+bracket_duties: &bracket_duties
+  LD: LD
+  MD: MD
+  HD: HD
+  XD: XD
+  SR: SR
+
+metal_finishes: &metal_finishes
+  B1: Black Prmr
+  B2: Black Pwdr Coat
+  BL: Black
+  C2: Blue Gloss
+  EP: Elctr Pltd
+  G2: Green Gloss
+  K2: Black Gloss
+  N2: Grey Gloss
+  O2: Orange Gloss
+  R2: Red Gloss
+  Y2: Yellow Gloss
+  UF: Unfinished
+  W2: White Pwdr Coat
+  WH: White
+
+wood_materials: &wood_materials
+  AL: Alder
+  AS: Ash
+  CH: Cherry
+  MA: Maple
+  MD: MDF
+  MH: Mahogany
+  OK: Oak
+  WL: Walnut
+  WO: White Oak
+
+wood_finishes: &wood_finishes
+  B3: Black Shelf Paint
+  BK: Black
+  BL: Black
+  CL: Clear
+  DG: Dove Grey
+  DM: Dutch Mocha
+  ES: Espresso
+  G1: Grey Shelf Paint
+  GL: Glazed
+  HG: Hatch Grey
+  IW: Ironwood
+  NM: Nutmeg
+  UF: Unfinished
+  WH: White
+
+sku_categories:
+  A:
+    name: Accessories
+    styles:
+      HK:
+        name: Hook
+        types:
+          '00': '-'
+        description1s:
+          '00': '-'
+        materials:
+          <<: *wood_materials
+        finishes:
+          <<: *metal_finishes
+  B:
+    name: Bracket
+    styles:
+      # Floating Shelf
+      FS:
+        name: Aksel
+        types:
+          <<: *bracket_duties
+        description1s:
+          <<: *widths
+        description2s:
+          <<: *rod_depths
+        materials:
+          <<: *metal_materials
+        finishes:
+          <<: *metal_finishes
+        extensions:
+          '-S': '-'
+      # Floating Counter
+      FC:
+        name: Drake
+        types:
+          '00': '-'
+        description1s:
+          <<: *widths
+        description2s:
+          '00': '-'
+        materials:
+          <<: *metal_materials
+        finishes:
+          <<: *metal_finishes
+      # Turnbuckle
+      TB:
+        name: Clarke
+        types: &clarke_types
+          CR: Collier Round
+          EB: Ebonized Black
+          SB: Satin Brass
+          SN: Satin Nickel
+        description1s:
+          <<: *widths
+        description2s:
+          '00': '-'
+        materials:
+          <<: *metal_materials
+        finishes:
+          <<: *metal_finishes
+      # Floating Mantle
+      FM:
+        name: Glenn
+        types:
+          MD: MD
+          HD: HD
+          SR: SR
+        description1s:
+          <<: *widths
+        description2s:
+          <<: *rod_depths
+        materials:
+          <<: *metal_materials
+        finishes:
+          <<: *metal_finishes
+        extensions:
+          '-S': '-'
+      # Floating Desk
+      FD:
+        name: Yuri
+        types:
+          '01': HD
+          '34': MD
+        description1s:
+          <<: *rod_depths
+        description2s:
+          RD: Round
+          SQ: Square
+        materials:
+          <<: *metal_materials
+        finishes:
+          <<: *metal_finishes
+      # LB: Visible Bracket
+      # L Bracket
+      VB:
+        name: Leif
+        types:
+          LE: '-'
+        description1s:
+          <<: *widths
+        description2s:
+          '07': 7" H
+          '09': 9" H
+        materials:
+          <<: *metal_materials
+        finishes:
+          <<: *metal_finishes
+      # Visable Shelf
+      VS:
+        name: Verne
+        types: &verne_types
+          '01': One
+          '02': Two
+          '03': Three
+          '04': Four
+          '05': Five
+        description1s:
+          '00': '-'
+        description2s:
+          '06': 6" D
+          '08': 8" D
+          '10': 10" D
+          '12': 12" D
+        materials:
+          <<: *metal_materials
+        finishes:
+          <<: *metal_finishes
+  # Shelf & Bracket Kits
+  K:
+    name: System
+    styles:
+      FS:
+        name: Aksel
+        types:
+          HD: HD
+          TR: Tromso
+        description1s:
+          '00': Solid
+          EN: Engineered
+          # Some skus have surface treatment here.
+          # RC: Bandsawn
+          # SS: Smooth
+        description2s:
+          RC: Bandsawn
+          SS: Smooth
+          '00': '-'
+        materials:
+          <<: *wood_materials
+          <<: *metal_materials
+        finishes:
+          <<: *wood_finishes
+          <<: *metal_finishes
+      LE:
+        name: Leif
+        types:
+          '00': Solid
+          EN: Engineered
+        description1s:
+          RC: Bandsawn
+          SS: Smooth
+          '00': '-'
+        description2s:
+          '00': '-'
+        materials:
+          <<: *wood_materials
+        finishes:
+          <<: *wood_finishes
+      TB:
+        name: Clarke
+        types:
+          <<: *clarke_types
+        description1s:
+          RC: Bandsawn
+          SS: Smooth
+        description2s:
+          '00': '-'
+        materials:
+          <<: *wood_materials
+        finishes:
+          <<: *wood_finishes
+      VS:
+        name: Verne
+        types:
+          '00': '-'
+        description1s:
+          RC: Bandsawn
+          SS: Smooth
+        description2s:
+          '00': '-'
+        materials:
+          <<: *wood_materials
+        finishes:
+          <<: *wood_finishes
+
+  H: Hardware
+  T: Tools
+  S:
+    name: Slab
+    styles:
+      EN: &slab_defaults
+        name: Engineered
+        types:
+          '00': '-'
+        description1s:
+          RC: Bandsawn
+          SS: Smooth
+          '00': '-'
+        description2s:
+          '00': '-'
+        materials:
+          <<: *wood_materials
+        finishes:
+          <<: *wood_finishes
+      SL:
+        <<: *slab_defaults
+        name: Solid
+  W:
+    name: Swatch
+    styles:
+      EN: &swatch_defaults
+        name: Engineered
+        types:
+          '00': '-'
+        description1s:
+          RC: Bandsawn
+          SS: Smooth
+          '00': '-'
+        description2s:
+          '00': '-'
+        materials:
+          <<: *wood_materials
+        finishes:
+          <<: *wood_finishes
+      SL:
+        <<: *swatch_defaults
+        name: Solid
+
+sku_positions:
+  1:
+    name: category
+    options_path: sku_categories
+    options_name_path: name
+    options_move_scope: true
+    length: 1
+    output_order: 1
+  2:
+    name: style
+    options_path: styles
+    options_name_path: name
+    options_move_scope: true
+    length: 2
+    output_order: 2
+  3:
+    name: type
+    options_path: types
+    length: 2
+    output_order: 4
+  4:
+    name: description1
+    options_path: description1s
+    length: 2
+    output_order: 6
+  5:
+    name: description2
+    options_path: description2s
+    length: 2
+    output_order: 5
+  6:
+    name: material
+    options_path: materials
+    length: 2
+    output_order: 3
+  7:
+    name: finish
+    options_path: finishes
+    length: 2
+    output_order: 7
+  8:
+    name: extension
+    options_path: extensions
+    length: 2
+    output_order: 8

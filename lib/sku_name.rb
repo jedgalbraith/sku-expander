@@ -1,81 +1,128 @@
 require 'sku_name/version'
 
-module SkuName
-  class Parse
-    class Error < StandardError; end
-    CONFIG_PATH = 'sku_name/config'.freeze
+module SkuName; end
 
-    attr_reader :skus
-    attr_reader :config
-    attr_reader :options
+class SkuName::Parse
+  class Error < StandardError; end
+  CONFIG_PATH = 'sku_name/config'.freeze
 
-    # @param skus Array
-    # @param config Hash
-    def initialize(skus, config, options = {})
-      @skus    = skus
-      @config  = config
-      @options = options
+  attr_reader :skus
+  attr_reader :config
+  attr_reader :options
+
+  # @param skus Array
+  # @param config Hash
+  def initialize(skus, config, options = {})
+    @skus    = skus
+    @config  = config
+    @options = options
+  end
+
+  def process
+    skus.each_with_object({}) do |sku, memo|
+      next if options[:ignore_patterns].any? { |pattern| pattern =~ sku }
+
+      memo[sku] = SkuName::SkuExpand.new(sku, config, options).process
     end
+  end
+end
 
-    def process
-      skus.map do |sku|
-        next if options[:ignore_patterns].any? { |pattern| pattern =~ sku }
+class SkuName::SkuExpand
+  class Error < StandardError; end
+  attr_reader :sku
+  attr_reader :config
+  attr_reader :options
 
-        {
-          sku: sku,
-          name: TranslateSku.new(sku, config, options).process
+  def initialize(sku, config, options)
+    @sku     = sku
+    @config  = config
+    @options = options
+  end
+
+  def process
+    # expand.sort_by do |position_name, _meta|
+    #   position = positions.find do |_position, settings|
+    #     settings['name'] == position_name
+    #   end
+    #   position[1]['output_order']
+    # end.to_h
+    expand
+  end
+
+  def expand
+    sku_c = sku.clone
+    config_handle = config.clone
+    positions.each_with_object({}) do |(_position, settings), memo|
+      break memo if sku_c.empty? && settings['name'] == 'extension'
+
+      # ensure SKU is proper length
+      if sku_c.length < settings['length']
+        memo[settings['name']] = {
+          abbreviation: 'ERROR: invalid SKU length',
+          expansion:    'ERROR: invalid SKU length'
         }
-      end.compact
+        break memo
+      end
+
+      # extract next portion from sku
+      sku_abbreviation = sku_c.slice!(0..(settings['length'] - 1))
+      config_scope = config_handle[settings['options_path']]
+
+      unless config_scope
+        memo[settings['name']] = {
+          abbreviation: sku_abbreviation,
+          expansion:
+            "ERROR: option values missing for '#{settings['options_path']}'"
+        }
+        next
+      end
+
+      begin
+        expansion_scope = config_scope[sku_abbreviation]
+      rescue NoMethodError => e
+        raise e unless e.message == "undefined method `[]' for nil:NilClass"
+
+        raise Error, "ERROR: no #{sku_abbreviation} within #{config_scope}"
+      end
+
+      unless expansion_scope
+        memo[settings['name']] = {
+          abbreviation: sku_abbreviation,
+          expansion:
+            "ERROR: '#{settings['options_path']}' does not have a value " \
+            "option for '#{sku_abbreviation}'"
+        }
+        next
+      end
+
+      config_handle = expansion_scope if settings['options_move_scope']
+
+      sku_expansion = begin
+        if settings['options_name_path']
+          begin
+            expansion_scope[settings['options_name_path']]
+          rescue NoMethodError => e
+            raise e unless e.message.include? == "undefined method `[]'"
+
+            raise(
+              Error,
+              'ERROR: config file missing ' \
+              "'#{settings['options_name_path']}' within '#{sku_abbreviation}'"
+            )
+          end
+        else
+          expansion_scope
+        end
+      end
+
+      memo[settings['name']] = {
+        abbreviation: sku_abbreviation,
+        expansion:    sku_expansion
+      }
     end
   end
 
-  class TranslateSku
-    class Error < StandardError; end
-    attr_reader :sku
-    attr_reader :config
-    attr_reader :options
-    attr_reader :delimeter
-
-    def initialize(sku, config, options)
-      @sku       = sku
-      @config    = config
-      @delimeter = options[:delimeter] || ' | '
-    end
-
-    def process
-      parts = parse_parts
-
-      # parts.sort_by! do |part|
-      #   directive = config.keys[parts.index(part)]
-      #   config[directive]['output_order']
-      # end
-      parts.join(delimeter)
-    end
-
-    private
-
-    def parse_parts
-      sku_c = sku.clone
-      parts = []
-      config.each do |directive, settings|
-        break if sku_c.empty? && directive == 'extension'
-
-        if sku_c.length < settings['length']
-          break parts << 'ERROR: not valid length'
-        end
-
-        option_key = sku_c.slice!(0..(settings['length'] - 1))
-        option_value = settings['options'][option_key]
-
-        if option_value
-          parts << option_value
-        elsif directive == 'extension'
-          # nothing
-        else
-          parts << "ERROR: no option value for: #{option_key}"
-        end
-      end
-      parts
-    end
+  def positions
+    config['sku_positions']
   end
 end
