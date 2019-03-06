@@ -1,35 +1,40 @@
 # Shared Lists
 metal_materials: &metal_materials
+  '--': CUSTOM
   CS: Crbn Stl
   MM: Mxd Mtls
   RE: Rclmd
 
-widths: &widths
-  '07': 7" W
-  '08': 8" W
-  '09': 9" W
-  '10': 10" W
-  '12': 12" W
-  '14': 14" W
-  '16': 16" W
-  '18': 18" W
-  '20': 20" W
-  '22': 22" W
-  '26': 26" W
-  '30': 30" W
-  '34': 34" W
-  '38': 38" W
-  '42': 42" W
-  '45': 45" W
-  '46': 46" W
-  '50': 50" W
-  '54': 54" W
-  '58': 58" W
-  '60': 60" W
-  '70': 70" W
-  '78': 78" W
+lengths: &lengths
+  '--': CUSTOM
+  '07': 7" L
+  '08': 8" L
+  '09': 9" L
+  '10': 10" L
+  '12': 12" L
+  '14': 14" L
+  '16': 16" L
+  '18': 18" L
+  '20': 20" L
+  '22': 22" L
+  '26': 26" L
+  '30': 30" L
+  '34': 34" L
+  '38': 38" L
+  '42': 42" L
+  '46': 46" L
+  '50': 50" L
+  '54': 54" L
+  '58': 58" L
+  '60': 60" L
+  '70': 70" L
+  '78': 78" L
+  RD: Round
+  SQ: Square
 
 rod_depths: &rod_depths
+  '--': CUSTOM
+  '45': 4.5" Rods
   '06': 6" Rods
   '08': 8" Rods
   '10': 10" Rods
@@ -37,32 +42,31 @@ rod_depths: &rod_depths
   '14': 14" Rods
   '16': 16" Rods
   '20': 20" Rods
-  RD: Round
 
 bracket_duties: &bracket_duties
   LD: LD
   MD: MD
   HD: HD
   XD: XD
-  SR: SR
+  SR: Single Rod
 
+# convention 1 letter, 1 number
 metal_finishes: &metal_finishes
+  '--': CUSTOM
   B1: Black Prmr
-  B2: Black Pwdr Coat
-  BL: Black
+  B2: Black Gloss
+  B3: Black Matte
   C2: Blue Gloss
-  EP: Elctr Pltd
   G2: Green Gloss
-  K2: Black Gloss
   N2: Grey Gloss
   O2: Orange Gloss
   R2: Red Gloss
-  Y2: Yellow Gloss
   UF: Unfinished
-  W2: White Pwdr Coat
-  WH: White
+  W2: White Gloss
+  Y2: Yellow Gloss
 
 wood_materials: &wood_materials
+  '--': CUSTOM
   AL: Alder
   AS: Ash
   CH: Cherry
@@ -73,15 +77,14 @@ wood_materials: &wood_materials
   WL: Walnut
   WO: White Oak
 
+# convention 2 letters
 wood_finishes: &wood_finishes
-  B3: Black Shelf Paint
+  '--': CUSTOM
   BK: Black
-  BL: Black
   CL: Clear
   DG: Dove Grey
   DM: Dutch Mocha
   ES: Espresso
-  G1: Grey Shelf Paint
   GL: Glazed
   HG: Hatch Grey
   IW: Ironwood
@@ -96,11 +99,15 @@ sku_categories:
       HK:
         name: Hook
         types:
-          '00': '-'
+          SH: Shard
+          PE: Peggy
         description1s:
           '00': '-'
+        description2s:
+          '01': Single
         materials:
           <<: *wood_materials
+          <<: *metal_materials
         finishes:
           <<: *metal_finishes
   B:
@@ -112,7 +119,7 @@ sku_categories:
         types:
           <<: *bracket_duties
         description1s:
-          <<: *widths
+          <<: *lengths
         description2s:
           <<: *rod_depths
         materials:
@@ -127,7 +134,7 @@ sku_categories:
         types:
           '00': '-'
         description1s:
-          <<: *widths
+          <<: *lengths
         description2s:
           '00': '-'
         materials:
@@ -138,18 +145,17 @@ sku_categories:
       TB:
         name: Clarke
         types: &clarke_types
-          CR: Collier Round
           EB: Ebonized Black
-          SB: Satin Brass
-          SN: Satin Nickel
+          SB: Brushed Satin Brass
+          SN: Brushed Satin Nickel
         description1s:
-          <<: *widths
+          <<: *lengths
         description2s:
           '00': '-'
         materials:
           <<: *metal_materials
         finishes:
-          <<: *metal_finishes
+          '00': '-'
       # Floating Mantle
       FM:
         name: Glenn
@@ -158,7 +164,7 @@ sku_categories:
           HD: HD
           SR: SR
         description1s:
-          <<: *widths
+          <<: *lengths
         description2s:
           <<: *rod_depths
         materials:
@@ -171,8 +177,7 @@ sku_categories:
       FD:
         name: Yuri
         types:
-          '01': HD
-          '34': MD
+          <<: *bracket_duties
         description1s:
           <<: *rod_depths
         description2s:
@@ -182,17 +187,15 @@ sku_categories:
           <<: *metal_materials
         finishes:
           <<: *metal_finishes
-      # LB: Visible Bracket
-      # L Bracket
-      VB:
+      LE:
         name: Leif
         types:
-          LE: '-'
-        description1s:
-          <<: *widths
-        description2s:
           '07': 7" H
           '09': 9" H
+        description1s:
+          <<: *lengths
+        description2s:
+          '00': '-'
         materials:
           <<: *metal_materials
         finishes:
@@ -201,11 +204,11 @@ sku_categories:
       VS:
         name: Verne
         types: &verne_types
-          '01': One
-          '02': Two
-          '03': Three
-          '04': Four
-          '05': Five
+          '01': One Shelf
+          '02': Two Shelf
+          '03': Three Shelf
+          '04': Four Shelf
+          '05': Five Shelf
         description1s:
           '00': '-'
         description2s:
@@ -224,18 +227,34 @@ sku_categories:
       FS:
         name: Aksel
         types:
-          HD: HD
-          TR: Tromso
+          <<: *bracket_duties
         description1s:
-          '00': Solid
-          EN: Engineered
-          # Some skus have surface treatment here.
-          # RC: Bandsawn
-          # SS: Smooth
-        description2s:
+          '--': CUSTOM
           RC: Bandsawn
           SS: Smooth
-          '00': '-'
+        description2s:
+          '--': CUSTOM
+          '00': Solid
+          SL: Solid
+          EN: Engineered
+        materials:
+          <<: *wood_materials
+          <<: *metal_materials
+        finishes:
+          <<: *wood_finishes
+          <<: *metal_finishes
+      FM:
+        name: Glenn
+        types:
+          '04': 4" Thick
+        description1s:
+          '--': CUSTOM
+          RC: Bandsawn
+          SS: Smooth
+        description2s:
+          '--': CUSTOM
+          SL: Solid
+          EN: Engineered
         materials:
           <<: *wood_materials
           <<: *metal_materials
@@ -270,6 +289,20 @@ sku_categories:
           <<: *wood_materials
         finishes:
           <<: *wood_finishes
+      TR:
+        name: Tromso
+        types:
+          '15': 1.5" Backbar
+          '04': 4" Backbar
+        description1s:
+          '00': '-'
+          HK: Hook
+        description2s:
+          '00': '-'
+        materials:
+          <<: *metal_materials
+        finishes:
+          <<: *metal_finishes
       VS:
         name: Verne
         types:
@@ -296,7 +329,6 @@ sku_categories:
         description1s:
           RC: Bandsawn
           SS: Smooth
-          '00': '-'
         description2s:
           '00': '-'
         materials:
@@ -326,49 +358,66 @@ sku_categories:
       SL:
         <<: *swatch_defaults
         name: Solid
+        types:
+          '00': '-'
+        description1s:
+          RC: Bandsawn
+          SS: Smooth
+          '00': '-'
+        description2s:
+          '00': '-'
+        materials:
+          <<: *wood_materials
+        finishes:
+          <<: *wood_finishes
+      '--':
+        name: All
+        types:
+          '--': '-'
+        description1s:
+          '--': 'All'
+        description2s:
+          '--': '-'
+        materials:
+          '--': 'All'
+        finishes:
+          '--': 'All'
 
 sku_positions:
   1:
     name: category
     options_path: sku_categories
     options_name_path: name
-    options_move_scope: true
+    parent: true
     length: 1
-    output_order: 1
   2:
     name: style
     options_path: styles
     options_name_path: name
-    options_move_scope: true
+    parent: true
     length: 2
-    output_order: 2
   3:
     name: type
     options_path: types
     length: 2
-    output_order: 4
   4:
     name: description1
     options_path: description1s
     length: 2
-    output_order: 6
   5:
     name: description2
     options_path: description2s
     length: 2
-    output_order: 5
   6:
     name: material
     options_path: materials
     length: 2
-    output_order: 3
   7:
     name: finish
     options_path: finishes
     length: 2
-    output_order: 7
   8:
     name: extension
+    optional: true
     options_path: extensions
     length: 2
-    output_order: 8

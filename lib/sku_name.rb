@@ -40,12 +40,6 @@ class SkuName::SkuExpand
   end
 
   def process
-    # expand.sort_by do |position_name, _meta|
-    #   position = positions.find do |_position, settings|
-    #     settings['name'] == position_name
-    #   end
-    #   position[1]['output_order']
-    # end.to_h
     expand
   end
 
@@ -53,30 +47,49 @@ class SkuName::SkuExpand
     sku_c = sku.clone
     config_handle = config.clone
     positions.each_with_object({}) do |(_position, settings), memo|
-      break memo if sku_c.empty? && settings['name'] == 'extension'
+      # Stub out optional positions with nil if empty.
+      # NOTE: Optional values can only be at the end.
+      if sku_c.empty? && settings['optional']
+        memo[settings['name']] = {
+          abbreviation: nil,
+          expansion:    nil
+        }
+      end
+
+      break memo if sku_c.empty?
 
       # ensure SKU is proper length
       if sku_c.length < settings['length']
-        memo[settings['name']] = {
-          abbreviation: 'ERROR: invalid SKU length',
-          expansion:    'ERROR: invalid SKU length'
+        error_details = {
+          settings['name'] => {
+            abbreviation: 'ERROR: invalid SKU length',
+            expansion:    'ERROR: invalid SKU length'
+          }
         }
-        break memo
+        puts error_details
+        memo.merge!(error_details)
+        next
       end
 
       # extract next portion from sku
       sku_abbreviation = sku_c.slice!(0..(settings['length'] - 1))
       config_scope = config_handle[settings['options_path']]
 
+      # ensure option values are defined for this sku_abbreviation
       unless config_scope
-        memo[settings['name']] = {
-          abbreviation: sku_abbreviation,
-          expansion:
-            "ERROR: option values missing for '#{settings['options_path']}'"
+        error_details = {
+          settings['name'] => {
+            abbreviation: sku_abbreviation,
+            expansion:
+              "ERROR: option values missing for '#{settings['options_path']}'"
+          }
         }
+        puts error_details
+        memo.merge!(error_details)
         next
       end
 
+      # ensure this sku_abbreviation exists in config
       begin
         expansion_scope = config_scope[sku_abbreviation]
       rescue NoMethodError => e
@@ -85,18 +98,25 @@ class SkuName::SkuExpand
         raise Error, "ERROR: no #{sku_abbreviation} within #{config_scope}"
       end
 
+      # ensure an option value exists for this option
       unless expansion_scope
-        memo[settings['name']] = {
-          abbreviation: sku_abbreviation,
-          expansion:
-            "ERROR: '#{settings['options_path']}' does not have a value " \
-            "option for '#{sku_abbreviation}'"
+        error_details = {
+          settings['name'] => {
+            abbreviation: sku_abbreviation,
+            expansion:
+              "ERROR: '#{settings['options_path']}' does not have a value " \
+              "option for '#{sku_abbreviation}'"
+          }
         }
+        puts error_details
+        memo.merge!(error_details)
         next
       end
 
-      config_handle = expansion_scope if settings['options_move_scope']
+      # move handle if within parent scope
+      config_handle = expansion_scope if settings['parent']
 
+      # ensure sku_expansion is defined
       sku_expansion = begin
         if settings['options_name_path']
           begin
@@ -115,6 +135,7 @@ class SkuName::SkuExpand
         end
       end
 
+      # expanding this sku_abbreviation was successful, store results
       memo[settings['name']] = {
         abbreviation: sku_abbreviation,
         expansion:    sku_expansion

@@ -9,8 +9,8 @@ RSpec.describe SkuName::Parse do
 
   let(:sku_file_path) { 'spec/fixtures/skus.csv' }
   let(:config_file_path) { 'spec/fixtures/config.yml' }
-  let(:output_names_path) { 'tmp/skus_names.csv' }
-  let(:output_details_path) { 'tmp/skus_details.csv' }
+  let(:output_names_path) { 'tmp/skus_shipping_easy.csv' }
+  let(:output_details_path) { 'tmp/skus_descriptions.csv' }
 
   it 'generates names from skus' do
     skus = CSV.read(sku_file_path).flatten
@@ -28,27 +28,33 @@ RSpec.describe SkuName::Parse do
 
     results = results.sort_by { |sku, _| sku }.to_h
 
+    # Details
     rows = results.map do |sku, meta|
       values = meta.values.map { |value| value[:expansion] }
-      [sku, values].flatten
+      [sku, values.compact.join(' | '), values].flatten
     end
 
     CSV.open(output_details_path, 'wb') do |csv|
-      csv << ['sku', results.first[1].keys].flatten
+      # headers
+      csv << ['sku', 'name', results.first[1].keys].flatten
+      # row values
       rows.each do |row|
         csv << row
       end
     end
 
+    # Names only
     rows = results.map do |sku, meta|
       expansions = meta.map do |_, abbr_exp|
         abbr_exp[:expansion]
       end
-      [sku, expansions.compact.join(' | ')]
+      [sku, expansions.compact.join(' | '), 'On']
     end
 
     CSV.open(output_names_path, 'wb') do |csv|
-      csv << ['SKU', 'name']
+      # headers
+      csv << ['SKU', 'name', 'Override Store Name']
+      # row values
       rows.each do |row|
         csv << row
       end
